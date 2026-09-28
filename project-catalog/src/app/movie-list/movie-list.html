@@ -28,3 +28,14 @@
     }
   }
 </ul>
+@if (totalPages > 1) {
+  <nav class="pagination" aria-label="Movie pages">
+    <button type="button" (click)="changePage(currentPage - 1)" [disabled]="isLoading || currentPage <= 1">
+      Previous
+    </button>
+    <span aria-live="polite">Page {{ currentPage }} of {{ totalPages }}</span>
+    <button type="button" (click)="changePage(currentPage + 1)" [disabled]="isLoading || currentPage >= totalPages">
+      Next
+    </button>
+  </nav>
+}

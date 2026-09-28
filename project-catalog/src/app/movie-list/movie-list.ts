@@ -14,6 +14,8 @@ export class MovieList implements OnChanges {
 
   @Input() loadMovies = false;
   movieList: IMovie[] = [];
+  currentPage = 1;
+  totalPages = 0;
   isLoading = false;
   errorMessage = '';
 
@@ -23,13 +25,15 @@ export class MovieList implements OnChanges {
     }
   }
 
-  private loadMovieList(): void {
+  private loadMovieList(page: number = 1): void {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.movieService.getMovieList().subscribe({
+    this.movieService.getMovieList(page).subscribe({
       next: (movieApiResponse: MovieApiResponse) => {
         this.movieList = movieApiResponse.results;
+        this.currentPage = movieApiResponse.page;
+        this.totalPages = movieApiResponse.total_pages;
         this.isLoading = false;
         this.changeDetectorRef.markForCheck();
       },
@@ -39,5 +43,13 @@ export class MovieList implements OnChanges {
         this.changeDetectorRef.markForCheck();
       }
     });
+  }
+
+  changePage(page: number): void {
+    if (this.isLoading || page < 1 || page > this.totalPages || page === this.currentPage) {
+      return;
+    }
+
+    this.loadMovieList(page);
   }
 }

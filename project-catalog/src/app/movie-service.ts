@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { MovieApiResponse } from './imovie';
 import { Observable } from 'rxjs';
@@ -22,8 +22,14 @@ export class MovieService {
 
     private http = inject(HttpClient);
 
-    getMovieList(): Observable<MovieApiResponse> {
-        return this.http.get<MovieApiResponse>('https://api.themoviedb.org/3/discover/movie?page=1&vote_count.gte=800&sort_by=vote_average.desc', {
+    getMovieList(page: number = 1): Observable<MovieApiResponse> {
+        const params = new HttpParams()
+            .set('page', page)
+            .set('vote_count.gte', 800)
+            .set('sort_by', 'vote_average.desc');
+
+        return this.http.get<MovieApiResponse>('https://api.themoviedb.org/3/discover/movie', {
+            params,
             headers: {
                 Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNTU4OTkyODY1OWJkMGEzMDc4ZjU0MTYxZGM0NWIxZSIsIm5iZiI6MTc4Njk2NzQ3NS42Mywic3ViIjoiNmE4MmY1YjMyNjE0ODE0OWRlNzY5MThkIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.gM-7BCmFYuXiQCzJVjoUBbaHfxENdtPU5YtdvDdxBgQ',
                 accept: 'application/json',
