@@ -21,6 +21,7 @@
         <div class="movie-details">
           <h2>{{ movie.title }}</h2>
           <p>Titre original : {{ movie.original_title }}</p>
+          <p>Genres : {{ movie.isLoadingGenres ? 'Chargement...' : (movie.genreNames.join(', ') || 'Non disponibles') }}</p>
           <p>Année : {{ movie.release_date ? movie.release_date.slice(0, 4) : '—' }}</p>
         </div>
       </li>

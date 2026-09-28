@@ -44,4 +44,23 @@ describe('MovieService', () => {
     expect(request.request.params.get('sort_by')).toBe('vote_average.desc');
     request.flush(response);
   });
+
+  it('should request and cache the movie genre list', () => {
+    const genres = [{ id: 28, name: 'Action' }];
+
+    service.getGenreList().subscribe((result) => {
+      expect(result).toEqual(genres);
+    });
+    service.getGenreList().subscribe((result) => {
+      expect(result).toEqual(genres);
+    });
+
+    const request = httpTestingController.expectOne('https://api.themoviedb.org/3/genre/movie/list');
+    request.flush({ genres });
+
+    service.getGenreList().subscribe((result) => {
+      expect(result).toEqual(genres);
+    });
+    httpTestingController.expectNone('https://api.themoviedb.org/3/genre/movie/list');
+  });
 });

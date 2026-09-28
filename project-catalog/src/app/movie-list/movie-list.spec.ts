@@ -9,6 +9,7 @@ describe('MovieList', () => {
   let component: MovieList;
   let fixture: ComponentFixture<MovieList>;
   let getMovieList: ReturnType<typeof vi.fn>;
+  let getGenreList: ReturnType<typeof vi.fn>;
 
   beforeEach(async () => {
     getMovieList = vi.fn((page: number = 1) => of({
@@ -22,14 +23,16 @@ describe('MovieList', () => {
         release_date: '2010-07-16',
         vote_average: 0,
         popularity: 0,
+        genre_ids: [28],
       }],
       total_pages: 3,
       total_results: 60,
     }));
+    getGenreList = vi.fn(() => of([{ id: 28, name: 'Action' }]));
 
     await TestBed.configureTestingModule({
       imports: [MovieList],
-      providers: [{ provide: MovieService, useValue: { getMovieList } }],
+      providers: [{ provide: MovieService, useValue: { getMovieList, getGenreList } }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MovieList);
@@ -50,7 +53,9 @@ describe('MovieList', () => {
     fixture.detectChanges();
 
     expect(getMovieList).toHaveBeenNthCalledWith(2, 2);
+    expect(getGenreList).toHaveBeenCalledTimes(2);
     expect(fixture.nativeElement.textContent).toContain('Page 2 of 3');
     expect(fixture.nativeElement.textContent).toContain('Titre original : Inception Original');
+    expect(fixture.nativeElement.textContent).toContain('Genres : Action');
   });
 });

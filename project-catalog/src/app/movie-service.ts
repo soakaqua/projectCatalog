@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { MovieApiResponse } from './imovie';
-import { Observable } from 'rxjs';
+import { IMovieGenre, MovieApiResponse, MovieGenreApiResponse } from './imovie';
+import { map, Observable, of, shareReplay, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class MovieService {
@@ -21,6 +21,12 @@ export class MovieService {
     // }
 
     private http = inject(HttpClient);
+    private genreListCache?: IMovieGenre[];
+    private genreListRequest?: Observable<IMovieGenre[]>;
+    private readonly headers = {
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNTU4OTkyODY1OWJkMGEzMDc4ZjU0MTYxZGM0NWIxZSIsIm5iZiI6MTc4Njk2NzQ3NS42Mywic3ViIjoiNmE4MmY1YjMyNjE0ODE0OWRlNzY5MThkIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.gM-7BCmFYuXiQCzJVjoUBbaHfxENdtPU5YtdvDdxBgQ',
+        accept: 'application/json',
+    };
 
     getMovieList(page: number = 1): Observable<MovieApiResponse> {
         const params = new HttpParams()
@@ -30,10 +36,26 @@ export class MovieService {
 
         return this.http.get<MovieApiResponse>('https://api.themoviedb.org/3/discover/movie', {
             params,
-            headers: {
-                Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNTU4OTkyODY1OWJkMGEzMDc4ZjU0MTYxZGM0NWIxZSIsIm5iZiI6MTc4Njk2NzQ3NS42Mywic3ViIjoiNmE4MmY1YjMyNjE0ODE0OWRlNzY5MThkIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.gM-7BCmFYuXiQCzJVjoUBbaHfxENdtPU5YtdvDdxBgQ',
-                accept: 'application/json',
-            },
+            headers: this.headers,
         });
+    }
+
+    getGenreList(): Observable<IMovieGenre[]> {
+        if (this.genreListCache) {
+            return of(this.genreListCache);
+        }
+
+        if (!this.genreListRequest) {
+            this.genreListRequest = this.http.get<MovieGenreApiResponse>(
+                'https://api.themoviedb.org/3/genre/movie/list',
+                { headers: this.headers },
+            ).pipe(
+                map((response) => response.genres),
+                tap((genres) => this.genreListCache = genres),
+                shareReplay({ bufferSize: 1, refCount: false }),
+            );
+        }
+
+        return this.genreListRequest;
     }
 }
