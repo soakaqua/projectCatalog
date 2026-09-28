@@ -13,7 +13,16 @@ describe('MovieList', () => {
   beforeEach(async () => {
     getMovieList = vi.fn((page: number = 1) => of({
       page,
-      results: [],
+      results: [{
+        id: 1,
+        title: 'Inception',
+        original_title: 'Inception Original',
+        overview: '',
+        poster_path: null,
+        release_date: '2010-07-16',
+        vote_average: 0,
+        popularity: 0,
+      }],
       total_pages: 3,
       total_results: 60,
     }));
@@ -42,5 +51,6 @@ describe('MovieList', () => {
 
     expect(getMovieList).toHaveBeenNthCalledWith(2, 2);
     expect(fixture.nativeElement.textContent).toContain('Page 2 of 3');
+    expect(fixture.nativeElement.textContent).toContain('Titre original : Inception Original');
   });
 });
