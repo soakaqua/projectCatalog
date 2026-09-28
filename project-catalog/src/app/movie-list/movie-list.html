@@ -18,7 +18,10 @@
             No poster
           </div>
         }
-        <span>{{ movie.title }}</span>
+        <div class="movie-details">
+          <h2>{{ movie.title }}</h2>
+          <p>Année : {{ movie.release_date ? movie.release_date.slice(0, 4) : '—' }}</p>
+        </div>
       </li>
     } @empty {
       <li>No movies found.</li>
