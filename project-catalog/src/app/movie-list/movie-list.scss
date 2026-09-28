@@ -1,0 +1,22 @@
+.movie-item {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	margin-block: 1rem;
+}
+
+.movie-poster {
+	display: block;
+	width: 100px;
+	aspect-ratio: 2 / 3;
+	object-fit: cover;
+	background: #e5e5e5;
+}
+
+.movie-poster--missing {
+	display: grid;
+	place-items: center;
+	color: #555;
+	font-size: 0.8rem;
+	text-align: center;
+}

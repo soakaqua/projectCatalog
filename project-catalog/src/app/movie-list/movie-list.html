@@ -1,0 +1,27 @@
+<ul>
+  @if (isLoading) {
+    <li>Loading movies...</li>
+  } @else if (errorMessage) {
+    <li>{{ errorMessage }}</li>
+  } @else {
+    @for (movie of movieList; track movie.id) {
+      <li class="movie-item">
+        @if (movie.poster_path) {
+          <img
+            class="movie-poster"
+            [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+            [alt]="'Poster for ' + movie.title"
+            loading="lazy"
+          />
+        } @else {
+          <div class="movie-poster movie-poster--missing" aria-label="No poster available">
+            No poster
+          </div>
+        }
+        <span>{{ movie.title }}</span>
+      </li>
+    } @empty {
+      <li>No movies found.</li>
+    }
+  }
+</ul>

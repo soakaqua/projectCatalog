@@ -1,0 +1,6 @@
+<p>hello</p>
+<button (click)="toggleMovieList()">Toggle Movie List</button>
+@if (showMovieList) {
+    <app-movie-list [loadMovies]="showMovieList"></app-movie-list>
+}
+<router-outlet />
