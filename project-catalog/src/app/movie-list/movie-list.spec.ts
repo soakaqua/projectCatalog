@@ -21,7 +21,8 @@ describe('MovieList', () => {
         overview: '',
         poster_path: null,
         release_date: '2010-07-16',
-        vote_average: 0,
+        vote_average: 8.7,
+        vote_count: 1250,
         popularity: 0,
         genre_ids: [28],
       }],
@@ -57,5 +58,7 @@ describe('MovieList', () => {
     expect(fixture.nativeElement.textContent).toContain('Page 2 of 3');
     expect(fixture.nativeElement.textContent).toContain('Titre original : Inception Original');
     expect(fixture.nativeElement.textContent).toContain('Genres : Action');
+    expect(fixture.nativeElement.textContent).toContain('Note moyenne : 8.7/10');
+    expect(fixture.nativeElement.textContent).toContain('Nombre de votants : 1250');
   });
 });

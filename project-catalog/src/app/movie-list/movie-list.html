@@ -23,6 +23,8 @@
           <p>Titre original : {{ movie.original_title }}</p>
           <p>Genres : {{ movie.isLoadingGenres ? 'Chargement...' : (movie.genreNames.join(', ') || 'Non disponibles') }}</p>
           <p>Année : {{ movie.release_date ? movie.release_date.slice(0, 4) : '—' }}</p>
+          <p>Note moyenne : {{ movie.vote_average }}/10</p>
+          <p>Nombre de votants : {{ movie.vote_count }}</p>
         </div>
       </li>
     } @empty {
